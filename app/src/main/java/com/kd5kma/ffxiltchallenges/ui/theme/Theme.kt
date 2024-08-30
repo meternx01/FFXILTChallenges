@@ -1,4 +1,4 @@
-package com.example.ffxiltchallenges.ui.theme
+package com.kd5kma.ffxiltchallenges.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

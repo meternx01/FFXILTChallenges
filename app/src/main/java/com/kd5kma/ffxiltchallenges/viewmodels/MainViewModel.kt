@@ -1,7 +1,7 @@
-package com.example.ffxiltchallenges.viewmodels
+package com.kd5kma.ffxiltchallenges.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.example.ffxiltchallenges.data.Challenge
+import com.kd5kma.ffxiltchallenges.data.Challenge
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.time.DayOfWeek
@@ -240,6 +240,13 @@ class MainViewModel : ViewModel() {
         val seconds = this.toSecondsPart()
 
         return String.format(Locale.getDefault(), "%01d:%02d:%02d", hours, minutes, seconds)
+    }
+
+    fun getLocalizedTime(tokyoTime: ZonedDateTime): String {
+        val userTimeZone = ZoneId.systemDefault()
+        val userTime = tokyoTime.withZoneSameInstant(userTimeZone)
+        val localizedTime = userTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
+        return localizedTime
     }
 
 }

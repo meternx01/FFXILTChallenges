@@ -1,4 +1,4 @@
-package com.example.ffxiltchallenges
+package com.kd5kma.ffxiltchallenges
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,9 +34,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.ffxiltchallenges.ui.theme.FFXILTChallengesTheme
-import com.example.ffxiltchallenges.viewmodels.MainViewModel
+import com.kd5kma.ffxiltchallenges.ui.theme.FFXILTChallengesTheme
+import com.kd5kma.ffxiltchallenges.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
+import timber.log.Timber
 
 
 class MainActivity : ComponentActivity() {
@@ -48,8 +50,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             FFXILTChallengesTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    innerPadding
-                    ChallengeTimer(viewModel)
+                    Timber.d("Padding: $innerPadding")
+                    ChallengeTimer(viewModel, Modifier.padding(innerPadding))
                 }
             }
         }
@@ -57,7 +59,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun ChallengeTimer(viewModel: MainViewModel) {
+fun ChallengeTimer(viewModel: MainViewModel, padding: Modifier) {
     val challenges by viewModel.challenges.collectAsState()
     val currentChallengeIndex = viewModel.getCurrentChallengeIndex()
     val currentChallenge = challenges.getOrNull(currentChallengeIndex)
@@ -77,7 +79,7 @@ fun ChallengeTimer(viewModel: MainViewModel) {
             .background(Color(0xFF6C757D)), // bg-secondary
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(32.dp))
+        //Spacer(modifier = Modifier.height(32.dp))
 
         Surface(
             modifier = Modifier
@@ -125,21 +127,24 @@ fun ChallengeTimer(viewModel: MainViewModel) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = timeUntilNextChallenge,
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        color = Color.White
+                    style = MaterialTheme.typography.displayLarge.copy(
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
                     ),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-//                val nextChallengeIndex = (currentChallengeIndex + 1) % challenges.size
-//                Text(
-//                    text = "Up Next: ${challenges[nextChallengeIndex].name}",
-//                    style = MaterialTheme.typography.bodyLarge.copy(
-//                        color = Color.White
-//                    ),
-//                    modifier = Modifier.align(Alignment.CenterHorizontally)
-//                )
+                val nextChallengeIndex = (currentChallengeIndex + 1) % challenges.size
+                val nextChallenge = challenges[nextChallengeIndex]
+                val localizedNextChallenge = viewModel.getLocalizedTime(nextChallenge.time)
+                Text(
+                    text = "Until: $localizedNextChallenge",
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color.White
+                    ),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
             }
         }
 
@@ -196,7 +201,16 @@ fun ChallengeTimer(viewModel: MainViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
+    val fakeInnerPadding = PaddingValues(
+        start = 16.dp,
+        top = 16.dp,
+        end = 16.dp,
+        bottom = 16.dp
+    )
     FFXILTChallengesTheme {
-        ChallengeTimer(viewModel = MainViewModel())
+        ChallengeTimer(
+            viewModel = MainViewModel(),
+            padding = androidx.compose.ui.Modifier.Companion.padding(fakeInnerPadding)
+        )
     }
 }

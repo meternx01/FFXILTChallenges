@@ -1,6 +1,6 @@
-package com.example.ffxiltchallenges
+package com.kd5kma.ffxiltchallenges
 
-import com.example.ffxiltchallenges.viewmodels.MainViewModel
+import com.kd5kma.ffxiltchallenges.viewmodels.MainViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -81,6 +81,17 @@ class ViewModelUnitTest {
         assertEquals(expectedFormattedTime, formattedTime)
     }
 
+    @Test
+    fun testGetLocalizedTime(){
+        val tokyoTime = ZonedDateTime.now(ZoneId.of("Asia/Tokyo"))
+        val localizedTime = viewModel.getLocalizedTime(tokyoTime)
+        val userTimeZone = ZoneId.systemDefault()
+        val userTime = tokyoTime.withZoneSameInstant(userTimeZone)
+        val expectedLocalizedTime =
+            userTime.format(java.time.format.DateTimeFormatter.ofPattern("hh:mm a"))
+        assertEquals(expectedLocalizedTime, localizedTime)
+    }
+
     @Suppress("Since15", "Since15")
     private fun java.time.Duration.formatTime(): String {
         val hours = this.toHours()
@@ -88,7 +99,7 @@ class ViewModelUnitTest {
         val seconds = this.toSecondsPart()
         return String.format(
             java.util.Locale.getDefault(),
-            "%02d:%02d:%02d",
+            "%01d:%02d:%02d",
             hours,
             minutes,
             seconds

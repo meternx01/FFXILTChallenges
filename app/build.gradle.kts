@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.ffxiltchallenges"
+    namespace = "com.kd5kma.ffxiltchallenges"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.ffxiltchallenges"
+        applicationId = "com.kd5kma.ffxiltchallenges"
         minSdk = 31
         //noinspection OldTargetApi
         targetSdk = 34
@@ -39,6 +39,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -60,6 +61,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.timber)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

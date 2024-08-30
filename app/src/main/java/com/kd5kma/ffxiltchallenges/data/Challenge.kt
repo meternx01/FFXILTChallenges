@@ -1,4 +1,4 @@
-package com.example.ffxiltchallenges.data
+package com.kd5kma.ffxiltchallenges.data
 
 import java.time.ZonedDateTime
 
