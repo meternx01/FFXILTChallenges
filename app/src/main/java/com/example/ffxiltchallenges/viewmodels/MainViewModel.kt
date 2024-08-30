@@ -1,6 +1,5 @@
 package com.example.ffxiltchallenges.viewmodels
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import com.example.ffxiltchallenges.data.Challenge
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -7,15 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -36,11 +33,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.ffxiltchallenges.ui.theme.FFXILTChallengesTheme
 import com.example.ffxiltchallenges.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
-import java.time.format.DateTimeFormatter
 
 
 class MainActivity : ComponentActivity() {
@@ -121,16 +116,19 @@ fun ChallengeTimer(viewModel: MainViewModel) {
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = Color.White, fontWeight = FontWeight.Light
                         ),
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = timeUntilNextChallenge, style = MaterialTheme.typography.headlineLarge.copy(
+                    text = timeUntilNextChallenge,
+                    style = MaterialTheme.typography.headlineLarge.copy(
                         color = Color.White
-                    ), modifier = Modifier.align(Alignment.CenterHorizontally)
+                    ),
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -148,19 +146,22 @@ fun ChallengeTimer(viewModel: MainViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(3){ index ->
+            items(3) { index ->
                 val nextChallengeIndex = (currentChallengeIndex + index + 1) % challenges.size
                 val nextChallenge = challenges[nextChallengeIndex]
                 val challengeStartTime = viewModel.getFormatedTime(nextChallenge.time)
 
-                Surface(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .border(2.dp, Color(0xFF00BB00)), color = Color(0xFF343A40), // bg-dark
-                    shape = RoundedCornerShape(8.dp)) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .border(2.dp, Color(0xFF00BB00)), color = Color(0xFF343A40), // bg-dark
+                    shape = RoundedCornerShape(8.dp)
+                ) {
                     Column(
                         modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally) {
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text(
                             text = nextChallenge.name,
                             style = MaterialTheme.typography.headlineSmall.copy(
@@ -171,24 +172,15 @@ fun ChallengeTimer(viewModel: MainViewModel) {
                         Text(
                             text = challengeStartTime,
                             style = MaterialTheme.typography.bodySmall.copy(
-                                color = Color.White, fontWeight = FontWeight.Light),
+                                color = Color.White, fontWeight = FontWeight.Light
+                            ),
 //                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                            )
+                        )
                     }
 
                 }
             }
         }
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth(0.9f)
-//                .padding(16.dp),
-//            horizontalArrangement = Arrangement.SpaceEvenly
-//        ) {
-//            ChallengeBox("Challenge", "Time")
-//            ChallengeBox("Challenge", "Time")
-//            ChallengeBox("Challenge", "Time")
-//        }
 //
 //        Text(
 //            text = "Made by Meterman from Phoenix/Catseyexi 2024",
@@ -197,33 +189,6 @@ fun ChallengeTimer(viewModel: MainViewModel) {
 //            ),
 //            modifier = Modifier.align(Alignment.CenterHorizontally)
 //        )
-    }
-}
-
-@Composable
-fun ChallengeBox(challenge: String, time: String) {
-    Surface(
-        modifier = Modifier
-            .size(100.dp)
-            .padding(8.dp)
-            .border(2.dp, Color(0xFF00BB00)),
-        color = Color(0xFF343A40), // bg-dark
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(8.dp), horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = challenge, style = MaterialTheme.typography.headlineSmall.copy(
-                    color = Color.White, fontSize = 20.sp
-                ), modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            Text(
-                text = time, style = MaterialTheme.typography.bodyLarge.copy(
-                    color = Color.White
-                ), modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-        }
     }
 }
 
