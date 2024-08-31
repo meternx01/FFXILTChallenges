@@ -14,6 +14,8 @@ import java.util.Locale
 
 @Suppress("Since15", "Since15")
 class MainViewModel : ViewModel() {
+    private val _isCatseye = MutableStateFlow(false)
+    val isCatseye: StateFlow<Boolean> get() = _isCatseye
     private val _challenges = MutableStateFlow(populateChallenges())
     val challenges: StateFlow<List<Challenge>> = _challenges
 
@@ -204,8 +206,10 @@ class MainViewModel : ViewModel() {
     fun getLastSundayMidnightInTokyo(): ZonedDateTime {
         val zoneID = ZoneId.of("Asia/Tokyo")
         val today = ZonedDateTime.now(zoneID)
-        val lastSunday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
-        return lastSunday.withHour(0).withMinute(0).withSecond(0).withNano(0)
+        var lastSunday = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY))
+        lastSunday = lastSunday.withHour(0).withMinute(0).withSecond(0).withNano(0)
+        if (_isCatseye.value) lastSunday = lastSunday.minusSeconds(120)
+        return lastSunday
     }
 
     fun countFourHourPeriodsSinceLastSunday(lastSundayMidnight: ZonedDateTime): Int {
@@ -247,6 +251,11 @@ class MainViewModel : ViewModel() {
         val userTime = tokyoTime.withZoneSameInstant(userTimeZone)
         val localizedTime = userTime.format(DateTimeFormatter.ofPattern("hh:mm a"))
         return localizedTime
+    }
+
+    fun setCatseye(isCatseye: Boolean) {
+        _isCatseye.value = isCatseye
+        _challenges.value = populateChallenges()
     }
 
 }
