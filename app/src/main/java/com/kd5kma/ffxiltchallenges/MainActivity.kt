@@ -1,5 +1,6 @@
 package com.kd5kma.ffxiltchallenges
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -49,6 +50,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.kd5kma.ffxiltchallenges.ui.theme.FFXILTChallengesTheme
 import com.kd5kma.ffxiltchallenges.viewmodels.MainViewModel
 import kotlinx.coroutines.delay
@@ -57,13 +60,22 @@ import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: MainViewModel by viewModels()
+//    private val viewModel: MainViewModel by viewModels()
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val viewModelFactory = viewModelFactory {
+                initializer {
+                    MainViewModel(application)
+                }
+            }
+
+            val viewModel: MainViewModel by viewModels {
+                viewModelFactory
+            }
+
             FFXILTChallengesTheme {
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
@@ -98,22 +110,11 @@ class MainActivity : ComponentActivity() {
 
 }
 
-//@Composable
-//fun MainScreen(innerPadding: PaddingValues, scope: CoroutineScope, drawerState: DrawerState, viewModel: MainViewModel) {
-//    ChallengeTimer(viewModel, innerPadding)
-//    Button(onClick = {
-//        scope.launch {
-//            if (drawerState.isClosed) drawerState.open()
-//            else drawerState.close()
-//        }
-//
-//    }) { Text("Settings") }
-//}
-
 @Composable
 fun SettingsPanel(viewModel: MainViewModel) {
     val isCatseye by viewModel.isCatseye.collectAsState()
-    var buttonText by remember { mutableStateOf("Retail") }
+    //var buttonText by remember { mutableStateOf("Retail") }
+    var buttonText = if (isCatseye) "Catseye" else "Retail"
 
     Column(
         modifier = Modifier
@@ -333,7 +334,7 @@ fun GreetingPreview() {
 
     FFXILTChallengesTheme {
         ChallengeTimer(
-            viewModel = MainViewModel(), innerPadding = fakeInnerPadding
+            viewModel = MainViewModel(application = Application()), innerPadding = fakeInnerPadding
         )
     }
 }
@@ -342,6 +343,6 @@ fun GreetingPreview() {
 @Composable
 fun SettingsPreview() {
     FFXILTChallengesTheme {
-        SettingsPanel(viewModel = MainViewModel())
+        SettingsPanel(viewModel = MainViewModel(application = Application()))
     }
 }

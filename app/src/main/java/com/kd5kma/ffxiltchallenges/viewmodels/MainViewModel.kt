@@ -1,9 +1,13 @@
 package com.kd5kma.ffxiltchallenges.viewmodels
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.kd5kma.ffxiltchallenges.data.Challenge
+import com.kd5kma.ffxiltchallenges.data.DataStoreManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.ZoneId
@@ -13,11 +17,22 @@ import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 
 @Suppress("Since15", "Since15")
-class MainViewModel : ViewModel() {
+class MainViewModel (application: Application) : ViewModel() {
     private val _isCatseye = MutableStateFlow(false)
     val isCatseye: StateFlow<Boolean> get() = _isCatseye
     private val _challenges = MutableStateFlow(populateChallenges())
     val challenges: StateFlow<List<Challenge>> = _challenges
+
+    private val dataStoreManager = DataStoreManager(application)
+
+    init {
+        viewModelScope.launch {
+            dataStoreManager.isCatseye.collect { isCatseye ->
+//                _isCatseye.value = isCatseye
+                setCatseye(isCatseye)
+            }
+        }
+    }
 
     private fun populateChallenges(): List<Challenge> {
         val time = getLastSundayMidnightInTokyo()
@@ -256,6 +271,9 @@ class MainViewModel : ViewModel() {
     fun setCatseye(isCatseye: Boolean) {
         _isCatseye.value = isCatseye
         _challenges.value = populateChallenges()
+        viewModelScope.launch {
+            dataStoreManager.setCatseye(isCatseye)
+        }
     }
 
 }

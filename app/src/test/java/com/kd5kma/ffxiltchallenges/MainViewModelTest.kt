@@ -1,5 +1,6 @@
 package com.kd5kma.ffxiltchallenges
 
+import android.app.Application
 import com.kd5kma.ffxiltchallenges.viewmodels.MainViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
@@ -15,7 +16,7 @@ class ViewModelUnitTest {
 
     @Before
     fun setUp() {
-        viewModel = MainViewModel()
+        viewModel = MainViewModel(Application())
     }
 
     @Test
